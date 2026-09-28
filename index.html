@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#FF6B4A">
+<title>Cooldown 2027 – Hitze-Hilfe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+
+:root{
+  --sunset:#FF6B4A;
+  --sunset-dark:#E8502F;
+  --sun:#FFB703;
+  --cool:#00B4D8;
+  --cool-dark:#0077B6;
+  --mint:#06D6A0;
+  --danger:#EF476F;
+  --danger-dark:#C7305A;
+  --warn:#FFB703;
+  --bg:#FFF8F0;
+  --surface:#FFFFFF;
+  --text:#2B2B33;
+  --text-muted:#7A7A85;
+  --border:#F0E6D8;
+  --radius-lg:22px;
+  --radius-md:16px;
+  --shadow-sm:0 4px 14px rgba(43,43,51,0.06);
+  --shadow-md:0 12px 30px rgba(43,43,51,0.10);
+  --font-head:'Outfit', sans-serif;
+  --font-body:'Inter', sans-serif;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;}
+
+body{
+  font-family:var(--font-body);
+  background:#EDEBE6;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ============ APP CONTAINER: Breite Desktop/Landscape-Ansicht ============ */
+.app{
+  width:100%;
+  max-width:1100px;
+  margin:0 auto;
+  min-height:100vh;
+  background:var(--bg);
+  position:relative;
+}
+
+@media (min-width:900px){
+  body{ padding:24px 0; }
+  .app{
+    min-height:calc(100vh - 48px);
+    border-radius:28px;
+    box-shadow:0 30px 70px rgba(0,0,0,0.15);
+    overflow:hidden;
+  }
+}
+
+/* ============ HEADER ============ */
+.app-header{
+  background:linear-gradient(135deg, var(--sunset) 0%, var(--sun) 55%, var(--cool) 100%);
+  padding:28px 32px 40px;
+  border-radius:0 0 32px 32px;
+  color:#fff;
+  position:relative;
+  overflow:hidden;
+}
+.app-header::after{
+  content:"";
+  position:absolute;
+  right:-40px; top:-40px;
+  width:160px; height:160px;
+  background:rgba(255,255,255,0.15);
+  border-radius:50%;
+}
+.header-top{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  position:relative;
+  z-index:2;
+}
+.logo-icon{
+  width:42px;height:42px;
+  background:rgba(255,255,255,0.25);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;
+  backdrop-filter:blur(4px);
+}
+.logo-text{
+  font-family:var(--font-head);
+  font-weight:800;
+  font-size:20px;
+  letter-spacing:-0.5px;
+}
+.logo-text span{
+  display:block;
+  font-family:var(--font-body);
+  font-weight:500;
+  font-size:11px;
+  opacity:0.85;
+  letter-spacing:0.5px;
+}
+
+.header-status{
+  margin-top:20px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:relative;
+  z-index:2;
+}
+.temp-display{
+  display:flex;
+  align-items:baseline;
+  gap:6px;
+}
+.temp-display .num{
+  font-family:var(--font-head);
+  font-size:42px;
+  font-weight:700;
+}
+.temp-display .unit{
+  font-size:18px;
+  opacity:0.85;
+}
+.warning-pill{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,0.22);
+  padding:8px 14px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  backdrop-filter:blur(4px);
+  white-space:nowrap;
+}
+.pulse-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:#fff;
+  animation:pulse 1.8s infinite;
+  flex-shrink:0;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(255,255,255,0.6);}
+  70%{box-shadow:0 0 0 8px rgba(255,255,255,0);}
+  100%{box-shadow:0 0 0 0 rgba(255,255,255,0);}
+}
+
+/* ============ TAB NAV ============ */
+.tab-nav{
+  position:relative;
+  display:flex;
+  margin:-26px 32px 0;
+  background:#fff;
+  border-radius:20px;
+  box-shadow:var(--shadow-md);
+  padding:6px;
+  z-index:10;
+  max-width:520px;
+}
+.tab-indicator{
+  position:absolute;
+  top:6px; left:6px;
+  height:calc(100% - 12px);
+  border-radius:15px;
+  background:linear-gradient(135deg, var(--sunset), var(--cool));
+  z-index:1;
+  transition:left .35s cubic-bezier(.4,0,.2,1), width .35s cubic-bezier(.4,0,.2,1);
+}
+.tab-btn{
+  flex:1;
+  position:relative;
+  z-index:2;
+  background:transparent;
+  border:none;
+  padding:10px 4px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+  cursor:pointer;
+  color:var(--text-muted);
+  font-family:var(--font-body);
+  font-weight:600;
+  font-size:11px;
+  transition:color .3s;
+}
+.tab-btn .icon{font-size:19px; transition:transform .3s;}
+.tab-btn.active{color:#fff;}
+.tab-btn.active .icon{transform:translateY(-1px);}
+
+/* ============ CONTENT ============ */
+.tab-content{padding:22px 32px 60px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block; animation:fadeSlideIn .4s ease;}
+@keyframes fadeSlideIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+h3{font-family:var(--font-head); font-size:16px; font-weight:700; margin-bottom:12px;}
+h4{font-family:var(--font-head); font-size:14px; font-weight:700;}
+p{font-size:13px; color:var(--text-muted); line-height:1.55;}
+
+.card{
+  background:var(--surface);
+  border-radius:var(--radius-lg);
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+  border:1px solid var(--border);
+  margin-bottom:16px;
+}
+
+/* Content in zwei Spalten auf breiten Screens */
+@media (min-width:800px){
+  #recommend.active{ display:block; max-width:640px; margin:0 auto; }
+}
+
+/* ============ TAB 1: KARTE (nur Bild) ============ */
+.map-only-card{
+  padding:0;
+  overflow:hidden;
+}
+.map-image-wrap{
+  width:100%;
+  line-height:0;
+}
+.map-image-wrap img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* ============ FORM ELEMENTS ============ */
+.form-grid{display:flex; flex-direction:column; gap:12px; margin-bottom:14px;}
+.form-group{display:flex; flex-direction:column; gap:6px;}
+.form-group label{font-size:12px; font-weight:600; color:var(--text-muted);}
+.form-group input[type="number"],
+.form-group input[type="text"]{
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid var(--border);
+  font-size:13px;
+  font-family:var(--font-body);
+  outline:none;
+  background:#FBF9F6;
+  transition:border-color .2s;
+  width:100%;
+}
+.form-group input[type="number"]:focus,
+.form-group input[type="text"]:focus{border-color:var(--sunset);}
+
+.field-hint{
+  font-size:11px;
+  color:var(--cool-dark);
+  margin-top:2px;
+}
+
+.btn-primary{
+  border:none;
+  padding:13px;
+  border-radius:14px;
+  background:linear-gradient(135deg,var(--sunset),var(--cool));
+  color:#fff;
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  box-shadow:var(--shadow-sm);
+  transition:transform .15s, opacity .2s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.btn-primary:active{transform:scale(0.97);}
+.btn-primary:disabled{opacity:0.6; cursor:not-allowed;}
+.full-width{width:100%;}
+
+.btn-secondary{
+  border:1px solid var(--border);
+  padding:13px;
+  border-radius:14px;
+  background:#F5F2EC;
+  color:var(--text);
+  font-family:var(--font-head);
+  font-weight:600;
+  font-size:14px;
+  cursor:pointer;
+  transition:background .2s, transform .15s;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.btn-secondary:hover{background:#EDE9E1;}
+.btn-secondary:active{transform:scale(0.97);}
+
+.button-group{
+  display:flex;
+  gap:10px;
+  margin-top:6px;
+}
+
+.status-text{
+  margin-top:10px;
+  font-size:12px;
+  text-align:center;
+  min-height:16px;
+}
+.status-text.error{color:var(--danger-dark); font-weight:600;}
+.status-text.success{color:var(--mint); font-weight:600;}
+
+/* ============ TAB 2: EMPFEHLUNGEN ============ */
+.forecast-scroll{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:4px 2px 16px;
+  scrollbar-width:none;
+  min-height:90px;
+}
+.forecast-scroll::-webkit-scrollbar{display:none;}
+.forecast-card{
+  flex-shrink:0;
+  width:72px;
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:12px 8px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+}
+.forecast-card.today{
+  background:linear-gradient(160deg,var(--sunset),var(--sun));
+  border-color:transparent;
+}
+.forecast-card.today *{color:#fff;}
+.forecast-day{font-size:11px; font-weight:700; color:var(--text-muted);}
+.forecast-icon{font-size:20px;}
+.forecast-temp{font-family:var(--font-head); font-weight:700; font-size:14px;}
+
+.alert-banner{
+  display:flex;
+  gap:10px;
+  padding:14px;
+  border-radius:16px;
+  margin-bottom:16px;
+  border-left:4px solid var(--text-muted);
+  background:#F3F1EC;
+  transition:background .3s, border-color .3s;
+}
+.alert-banner .alert-icon{font-size:20px;}
+.alert-banner strong{font-size:13px; display:block; margin-bottom:2px;}
+.alert-banner p{margin:0;}
+.alert-banner.level-none{background:#E7F8F0; border-color:var(--mint);}
+.alert-banner.level-1{background:#FFF6E0; border-color:var(--warn);}
+.alert-banner.level-2{background:#FDEDF0; border-color:var(--danger);}
+
+.intro-card p{color:var(--text); font-size:13.5px;}
+.intro-card{
+  background:linear-gradient(160deg,#FFF3EA,#EAF8FC);
+  border:none;
+}
+
+/* Accordion */
+.accordion-item{
+  background:#fff;
+  border:1px solid var(--border);
+  border-radius:16px;
+  margin-bottom:10px;
+  overflow:hidden;
+}
+.accordion-header{
+  width:100%;
+  border:none;
+  background:transparent;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  cursor:pointer;
+  text-align:left;
+}
+.accordion-icon{font-size:18px; flex-shrink:0;}
+.accordion-title{
+  flex:1;
+  font-family:var(--font-head);
+  font-weight:700;
+  font-size:13.5px;
+  color:var(--text);
+}
+.accordion-chevron{
+  font-size:16px;
+  color:var(--text-muted);
+  transition:transform .3s;
+  flex-shrink:0;
+}
+.accordion-item.open .accordion-chevron{transform:rotate(180deg);}
+.accordion-content{
+  max-height:0;
+  overflow:hidden;
+  transition:max-height .4s ease;
+}
+.accordion-item.open .accordion-content{max-height:1200px;}
+.accordion-content ul{
+  list-style:none;
+  padding:0 14px 14px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.accordion-content ul li{
+  font-size:12.5px;
+  color:var(--text-muted);
+  line-height:1.55;
+  padding-left:18px;
+  position:relative;
+}
+.accordion-content ul li::before{
+  content:"•";
+  position:absolute;
+  left:4px;
+  color:var(--sunset);
+  font-weight:900;
+}
+.danger-box{
+  margin:0 14px 14px;
+  background:#FDEDF0;
+  border:1px solid var(--danger);
+  border-radius:12px;
+  padding:12px;
+}
+.danger-box strong{color:var(--danger-dark); font-size:12.5px; display:block; margin-bottom:4px;}
+.danger-box p{color:var(--danger-dark); font-size:12px; margin:0;}
+
+.source-note{
+  font-size:10.5px;
+  color:var(--text-muted);
+  text-align:center;
+  margin-top:6px;
+  opacity:0.8;
+}
+
+/* ============ TAB 3: WASSER-TRACKER ============ */
+input[type="range"]{
+  width:100%;
+  height:8px;
+  border-radius:5px;
+  background:var(--border);
+  outline:none;
+  -webkit-appearance:none;
+  margin-top:4px;
+}
+input[type="range"]::-webkit-slider-thumb{
+  -webkit-appearance:none;
+  appearance:none;
+  width:24px;height:24px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--sunset),var(--cool));
+  cursor:pointer;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+input[type="range"]::-moz-range-thumb{
+  width:24px;height:24px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--sunset),var(--cool));
+  cursor:pointer;
+  border:none;
+  box-shadow:0 2px 6px rgba(0,0,0,0.2);
+}
+.intensity-display{
+  text-align:center;
+  margin-top:6px;
+  font-size:13px;
+  color:var(--sunset-dark);
+  font-weight:700;
+}
+
+.result-card-alt{
+  background:linear-gradient(135deg,var(--sunset),var(--cool));
+  color:#fff;
+  border:none;
+}
+.result-card-alt .result-row span{color:#fff; opacity:0.9;}
+.result-card-alt .result-row strong{color:#fff;}
+
+.result-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  padding:6px 0;
+  font-size:13px;
+}
+.result-row span:first-child{color:var(--text-muted); font-weight:600;}
+.result-row strong{
+  font-family:var(--font-head);
+  font-size:16px;
+  color:var(--sunset-dark);
+}
+.result-row.sub{
+  border-top:1px solid var(--border);
+  margin-top:4px;
+  padding-top:10px;
+}
+.result-row.sub span:last-child{
+  font-weight:700;
+  color:var(--text);
+}
+
+.progress-label{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text);
+  margin-bottom:10px;
+}
+.progress-bar{
+  width:100%;
+  height:26px;
+  background:#F0EDE7;
+  border-radius:14px;
+  overflow:hidden;
+  margin-bottom:8px;
+}
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--sunset),var(--cool));
+  transition:width .4s ease;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  font-weight:700;
+  font-size:11px;
+}
+.progress-text{
+  text-align:center;
+  color:var(--text-muted);
+  font-size:12px;
+  font-weight:600;
+}
+
+.info-box{
+  background:#EAF8FC;
+  border-left:4px solid var(--cool);
+  padding:14px;
+  border-radius:14px;
+  margin-top:4px;
+  color:var(--text-muted);
+  font-size:12px;
+  line-height:1.6;
+}
+.info-box strong{color:var(--text);}
+
+@media (min-width:800px){
+  #water.active{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+  }
+  #water.active .form-card{ grid-column:1; grid-row:1 / span 3; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="app-header">
+    <div class="header-top">
+      <div class="logo-icon">☀️</div>
+      <div class="logo-text">
+        Cooldown 2027
+        <span>Deine Hitze-Hilfe</span>
+      </div>
+    </div>
+    <div class="header-status">
+      <div class="temp-display">
+        <span class="num" id="headerTemp">--</span><span class="unit">°C</span>
+      </div>
+      <div class="warning-pill" id="headerPill">
+        <span class="pulse-dot"></span>
+        <span id="headerPillText">Noch keine Daten</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===================== TAB NAV ===================== -->
+  <nav class="tab-nav" id="tabNav">
+    <span class="tab-indicator" id="tabIndicator"></span>
+    <button class="tab-btn active" data-tab="map">
+      <span class="icon">🗺️</span> Karte
+    </button>
+    <button class="tab-btn" data-tab="recommend">
+      <span class="icon">🧑‍🦱</span> Für dich
+    </button>
+    <button class="tab-btn" data-tab="water">
+      <span class="icon">💧</span> Trinkrechner
+    </button>
+  </nav>
+
+  <!-- ===================== CONTENT ===================== -->
+  <main class="tab-content">
+
+    <!-- ---------- TAB 1: KARTE (nur Bild) ---------- -->
+    <section id="map" class="tab-panel active">
+      <div class="card map-only-card">
+        <div class="map-image-wrap">
+          <img src="./images/map.png" alt="Karte mit Kühlorten, Wasserstellen und Schattenplätzen">
+        </div>
+        <p>
+        🟠 - Wasser Refill <br>
+        🔵 - Kühle Orte
+    </p>
+      </div>
+    </section>
+
+    <!-- ---------- TAB 2: EMPFEHLUNGEN ---------- -->
+    <section id="recommend" class="tab-panel">
+
+      <div class="card form-card">
+        <h3>Deine Angaben</h3>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Alter</label>
+            <input type="number" id="rec-age" placeholder="z.B. 34" min="0" max="120">
+          </div>
+          <div class="form-group">
+            <label>Wohnort oder Stadt</label>
+            <input type="text" id="rec-location" placeholder="z.B. Berlin">
+            <span class="field-hint">Tipp: Stadtnamen funktionieren zuverlässiger als PLZ.</span>
+          </div>
+        </div>
+        <button class="btn-primary full-width" id="recBtn">
+          <span id="recBtnText">Empfehlungen generieren</span>
+        </button>
+        <p class="status-text" id="recStatus"></p>
+      </div>
+
+      <div id="forecastWrapper" style="display:none;">
+        <h3>Wetter-Vorhersage</h3>
+        <div class="forecast-scroll" id="forecastScroll"></div>
+        <p class="source-note">Datenquelle: Open-Meteo (Wetter &amp; Geocoding)</p>
+      </div>
+
+      <div id="alertWrapper" style="display:none;">
+        <div class="alert-banner" id="alertBanner">
+          <span class="alert-icon" id="alertIcon">⚠️</span>
+          <div>
+            <strong id="alertTitle">–</strong>
+            <p id="alertText">–</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="ageNote" class="card" style="display:none;"></div>
+
+      <div class="card intro-card">
+        <p>Es ist wichtig, dem Körper bei seinem natürlichen Abkühlungsprozess zu helfen. Das Bundesinstitut für Öffentliche Gesundheit empfiehlt, ausreichend zu trinken – am besten etwa zwei bis drei Liter über den Tag verteilt.</p>
+      </div>
+
+      <div class="accordion" id="tipsAccordion">
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span class="accordion-icon">🛡️</span>
+            <span class="accordion-title">Vorbeugen</span>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-content">
+            <ul>
+              <li>Es ist von Bedeutung, sich selbst und auch die eigene Wohnung bei hohen Temperaturen zu kühlen.</li>
+              <li>Es ist ratsam, in der Sonne eine Kopfbedeckung zu tragen und gleichzeitig einen Sonnenschutz mit hohem Lichtschutzfaktor aufzutragen. Informationen zu UV-Strahlung finden Sie beim Bundesamt für Strahlenschutz.</li>
+              <li>Aktivitäten sollten in die kühleren Morgen- oder Abendstunden verlegt werden.</li>
+              <li>Wenn Erkrankungen vorliegen oder Medikamente eingenommen werden, kann ein Gespräch mit einem Arzt oder einer Ärztin sinnvoll sein.</li>
+              <li>Sorgen Sie für ausreichend Getränkevorräte. Gute Durstlöscher sind Mineralwasser, verdünnte Säfte und Kräuter- oder Früchtetee – aber nicht eiskalt! Kühl oder lauwarm helfen sie dem Körper besser, mit der Hitze umzugehen. Alkohol- oder koffeinhaltige Getränke sollten Sie besser vermeiden.</li>
+              <li>Machen Sie Ihr Zuhause hitzefest. Dunkeln Sie Ihre Räume ab und sorgen Sie für Schattenplätze auf Balkon oder Terrasse.</li>
+              <li>Wenn Sie auf Medikamente angewiesen sind: Sprechen Sie mit Ihrem Arzt! Es kann sinnvoll sein, die Dosierung bei Hitze anzupassen.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span class="accordion-icon">🔥</span>
+            <span class="accordion-title">Die Hitze ist da – das können Sie tun</span>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-content">
+            <ul>
+              <li>Tragen Sie weite, leichte und helle Kleidung und bei Aufenthalt im Freien eine Kopfbedeckung.</li>
+              <li>Trinken Sie viel! Mindestens 1,5–2 Liter pro Tag. Schaffen Sie kleine Erinnerungshilfen (z. B. ein volles Glas griffbereit in Sichtweite stellen, gemeinsam mit dem Hausarzt einen Trinkplan erstellen).</li>
+              <li>Gemüse, Salate und wasserreiches Obst sind bei Hitze ideal. Salzhaltige Lebensmittel helfen, den Mineralverlust auszugleichen. Vermeiden Sie schwer verdauliche und fettreiche Gerichte.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span class="accordion-icon">🏠</span>
+            <span class="accordion-title">Tipps für zu Hause</span>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-content">
+            <ul>
+              <li>Bevorzugt zu kühleren Tageszeiten, zum Beispiel am frühen Morgen, lüften.</li>
+              <li>Geschlossene Fenster abdunkeln.</li>
+              <li>Verwenden Sie zum Abkühlen kalte Fußbäder, Sprühflaschen mit Wasser (regelmäßig reinigen) oder kühlende Körperlotionen. Handgelenke und Unterarme unter kaltes Wasser halten wirkt auch lindernd.</li>
+              <li>Lauwarm Duschen! Kalte Duschen erschweren dem Körper die Wärmeabgabe. Für Kinder eignen sich Planschbecken oder andere Wasserspiele.</li>
+              <li>Auch nachts nur leichte Bekleidung und leichte Bettwäsche verwenden, um einen Hitzestau zu vermeiden.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="accordion-item">
+          <button class="accordion-header">
+            <span class="accordion-icon">🚶</span>
+            <span class="accordion-title">Tipps für unterwegs</span>
+            <span class="accordion-chevron">⌄</span>
+          </button>
+          <div class="accordion-content">
+            <ul>
+              <li>Sonnenschutzmittel nicht vergessen! Mindestens Lichtschutzfaktor 20, für Kleinkinder Lichtschutzfaktor 30. Bei längerem Aufenthalt im Freien regelmäßig nachcremen.</li>
+              <li>Kopfbedeckung nicht vergessen! Auch Sonnenschirme können hilfreich sein.</li>
+              <li>Pralle Sonne wenn möglich meiden, Schatten bevorzugen.</li>
+              <li>Körperliche Betätigungen wie Einkaufen, Spaziergänge und Sport möglichst in die frühen Morgen- oder späten Abendstunden legen.</li>
+            </ul>
+            <div class="danger-box">
+              <strong>⚠️ ACHTUNG:</strong>
+              <p>Auf keinen Fall Menschen oder Tiere allein im heißen Auto zurücklassen. Die Temperaturen in einem abgestellten Auto steigen sehr schnell deutlich über Außentemperatur-Niveau. Es besteht Lebensgefahr!</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ---------- TAB 3: WASSER-TRACKER ---------- -->
+    <section id="water" class="tab-panel">
+
+      <div class="card form-card">
+        <h3>💧 Wasser-Tracker</h3>
+        <p class="status-text error" id="waterError" style="display:none;"></p>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Alter (Jahre)</label>
+            <input type="number" id="w-alter" placeholder="z.B. 30" min="1" max="120">
+          </div>
+
+          <div class="form-group">
+            <label>Gewicht (kg)</label>
+            <input type="number" id="w-gewicht" placeholder="z.B. 75" min="20" max="300" step="0.1">
+          </div>
+
+          <div class="form-group">
+            <label>Standort (Stadt)</label>
+            <input type="text" id="w-stadt" placeholder="z.B. Berlin">
+          </div>
+
+          <div class="form-group">
+            <label>Sport pro Tag (Stunden)</label>
+            <input type="number" id="w-sport" placeholder="z.B. 1" min="0" max="24" step="0.5">
+          </div>
+
+          <div class="form-group">
+            <label>Trainingsintensität (1-10)</label>
+            <input type="range" id="w-intensitaet" min="1" max="10" value="5">
+            <div class="intensity-display">
+              <span id="w-intensitaetAnzeige">5</span>/10
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Gläser Wasser bereits getrunken</label>
+            <input type="number" id="w-glaeser" placeholder="z.B. 2" min="0" step="1">
+          </div>
+        </div>
+
+        <div class="button-group">
+          <button class="btn-primary full-width" id="w-calcBtn">📊 Berechnen</button>
+          <button class="btn-secondary full-width" id="w-resetBtn">🔄 Zurücksetzen</button>
+        </div>
+      </div>
+
+      <div id="w-results" style="display:none;">
+        <div class="card result-card-alt">
+          <div class="result-row">
+            <span>🌡️ Aktuelle Temperatur</span>
+            <strong id="w-temp">-</strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="result-row">
+            <span>💧 Empfohlene Wassermenge heute</span>
+            <strong id="w-empfohlen">-</strong>
+          </div>
+          <div class="result-row sub">
+            <span>📌 Basis (Körpergewicht)</span>
+            <span id="w-basis">-</span>
+          </div>
+          <div class="result-row sub">
+            <span>⚽ Zusatz (Sport)</span>
+            <span id="w-sportzusatz">-</span>
+          </div>
+          <div class="result-row sub">
+            <span>🌡️ Temperatur-Zusatz</span>
+            <span id="w-tempzusatz">-</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <p class="progress-label">📈 Fortschritt heute</p>
+          <div class="progress-bar">
+            <div class="progress-fill" id="w-progressBar" style="width:0%">
+              <span id="w-progressText"></span>
+            </div>
+          </div>
+          <p class="progress-text" id="w-progressInfo">0 / 0 Gläser</p>
+        </div>
+
+        <div class="info-box">
+          <strong>📝 Hinweis:</strong> Die Berechnung basiert auf einem Standard-Trinkglas (250ml).
+          Die empfohlene Menge wird berechnet aus:
+          <strong>Körpergewicht × 0.035L</strong> + <strong>Sportausgleich</strong> + <strong>Temperaturausgleich</strong>.
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+</div>
+
+<script>
+/* ===================== TAB SWITCHING ===================== */
+const tabBtns = document.querySelectorAll('.tab-btn');
+const tabPanels = document.querySelectorAll('.tab-panel');
+const indicator = document.getElementById('tabIndicator');
+
+function moveIndicator(btn){
+  indicator.style.width = btn.offsetWidth + 'px';
+  indicator.style.left = btn.offsetLeft + 'px';
+}
+
+tabBtns.forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    tabBtns.forEach(b=>b.classList.remove('active'));
+    tabPanels.forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    moveIndicator(btn);
+  });
+});
+
+window.addEventListener('load', ()=> moveIndicator(document.querySelector('.tab-btn.active')));
+window.addEventListener('resize', ()=> moveIndicator(document.querySelector('.tab-btn.active')));
+
+/* ===================== ACCORDION (Empfehlungen) ===================== */
+document.querySelectorAll('.accordion-header').forEach(header=>{
+  header.addEventListener('click', ()=>{
+    const item = header.parentElement;
+    const isOpen = item.classList.contains('open');
+    document.querySelectorAll('.accordion-item').forEach(i=>i.classList.remove('open'));
+    if(!isOpen) item.classList.add('open');
+  });
+});
+
+/* =====================================================================
+   FELD-SYNCHRONISATION ZWISCHEN TABS (Alter & Ort)
+   ===================================================================== */
+function syncFields(idA, idB){
+  const a = document.getElementById(idA);
+  const b = document.getElementById(idB);
+  if(!a || !b) return;
+  a.addEventListener('input', ()=>{ if(b.value !== a.value) b.value = a.value; });
+  b.addEventListener('input', ()=>{ if(a.value !== b.value) a.value = b.value; });
+}
+syncFields('rec-age', 'w-alter');
+syncFields('rec-location', 'w-stadt');
+
+/* =====================================================================
+   WETTER-API (Open-Meteo – zuverlässige CORS-Unterstützung, kein Key nötig)
+   Wird für beide Tabs (Für dich & Trinkrechner) verwendet.
+   ===================================================================== */
+
+async function geocodeCity(query){
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=1&language=de&format=json`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Geocoding fehlgeschlagen. Bitte versuche es erneut.');
+  const data = await res.json();
+  if(!data.results || !data.results.length) throw new Error('Ort nicht gefunden. Bitte prüfe die Schreibweise (am besten Stadtname verwenden).');
+  const r = data.results[0];
+  return { lat: r.latitude, lon: r.longitude, name: r.name };
+}
+
+async function fetchWeather(lat, lon){
+  const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&daily=temperature_2m_max,weathercode&current=temperature_2m&timezone=auto&forecast_days=4`;
+  const res = await fetch(url);
+  if(!res.ok) throw new Error('Wetterdaten konnten nicht geladen werden.');
+  const data = await res.json();
+  if(!data.daily || !data.daily.time || !data.daily.time.length) throw new Error('Keine Wetterdaten für diesen Ort verfügbar.');
+  return data;
+}
+
+function iconForWeatherCode(code){
+  if(code === 0) return '☀️';
+  if(code === 1 || code === 2) return '⛅';
+  if(code === 3) return '☁️';
+  if(code === 45 || code === 48) return '🌫️';
+  if([51,53,55,56,57].includes(code)) return '🌦️';
+  if([61,63,65,66,67,80,81,82].includes(code)) return '🌧️';
+  if([71,73,75,77,85,86].includes(code)) return '❄️';
+  if([95,96,99].includes(code)) return '⛈️';
+  return '🌡️';
+}
+
+function renderForecast(daily){
+  const scroll = document.getElementById('forecastScroll');
+  scroll.innerHTML = '';
+  const dayNames = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+
+  daily.time.forEach((dateStr, idx)=>{
+    const maxT = Math.round(daily.temperature_2m_max[idx]);
+    const code = daily.weathercode[idx];
+    const icon = iconForWeatherCode(code);
+    const dateObj = new Date(dateStr + 'T00:00:00');
+    const label = idx === 0 ? 'Heute' : dayNames[dateObj.getDay()];
+
+    const card = document.createElement('div');
+    card.className = 'forecast-card' + (idx === 0 ? ' today' : '');
+    card.innerHTML = `
+      <span class="forecast-day">${label}</span>
+      <span class="forecast-icon">${icon}</span>
+      <span class="forecast-temp">${maxT}°</span>
+    `;
+    scroll.appendChild(card);
+  });
+}
+
+function updateHeader(maxTemp, level){
+  document.getElementById('headerTemp').textContent = Math.round(maxTemp);
+  const pill = document.getElementById('headerPill');
+  const pillText = document.getElementById('headerPillText');
+  pill.style.background = level === 2 ? 'rgba(239,71,111,0.35)'
+                        : level === 1 ? 'rgba(255,183,3,0.35)'
+                        : 'rgba(6,214,160,0.3)';
+  pillText.textContent = level === 2 ? 'Hitzewarnung Stufe 2'
+                        : level === 1 ? 'Hitzewarnung Stufe 1'
+                        : 'Keine Hitzewarnung';
+}
+
+function renderAlert(maxTemp){
+  const banner = document.getElementById('alertBanner');
+  const title = document.getElementById('alertTitle');
+  const text = document.getElementById('alertText');
+  const icon = document.getElementById('alertIcon');
+  banner.classList.remove('level-1','level-2','level-none');
+
+  let level = 0;
+  if(maxTemp >= 38){
+    level = 2;
+    banner.classList.add('level-2');
+    icon.textContent = '🔴';
+    title.textContent = 'Extreme Hitzewarnung';
+    text.textContent = `Bei bis zu ${Math.round(maxTemp)}°C besteht ernstzunehmende Gesundheitsgefahr. Meide die pralle Sonne und trinke ausreichend.`;
+  } else if(maxTemp >= 32){
+    level = 2;
+    banner.classList.add('level-2');
+    icon.textContent = '⚠️';
+    title.textContent = 'Hitzewarnung Stufe 2';
+    text.textContent = `Bei bis zu ${Math.round(maxTemp)}°C ist erhöhte Vorsicht angesagt.`;
+  } else if(maxTemp >= 27){
+    level = 1;
+    banner.classList.add('level-1');
+    icon.textContent = '🟠';
+    title.textContent = 'Hitzewarnung Stufe 1';
+    text.textContent = `Bei bis zu ${Math.round(maxTemp)}°C solltest du auf ausreichend Flüssigkeit und Schatten achten.`;
+  } else {
+    level = 0;
+    banner.classList.add('level-none');
+    icon.textContent = '✅';
+    title.textContent = 'Keine Hitzewarnung';
+    text.textContent = `Mit bis zu ${Math.round(maxTemp)}°C ist heute keine besondere Vorsicht notwendig.`;
+  }
+  document.getElementById('alertWrapper').style.display = 'block';
+  return level;
+}
+
+function renderAgeNote(age, maxTemp){
+  const box = document.getElementById('ageNote');
+  if(!age || maxTemp < 27){ box.style.display = 'none'; return; }
+
+  let msg = '';
+  if(age >= 65){
+    msg = 'Da du über 65 Jahre alt bist, gehörst du zu einer besonders hitzeempfindlichen Gruppe. Achte verstärkt auf ausreichend Flüssigkeit und kühle Rückzugsorte.';
+  } else if(age <= 12){
+    msg = 'Kinder reagieren besonders empfindlich auf Hitze. Sorge für ausreichend Flüssigkeit, Schatten und vermeide die Mittagssonne.';
+  } else {
+    box.style.display = 'none';
+    return;
+  }
+  box.innerHTML = `
+    <div style="display:flex; gap:10px; align-items:flex-start;">
+      <span style="font-size:20px;">🧑</span>
+      <p style="margin:0; color:var(--text); font-size:13px;">${msg}</p>
+    </div>`;
+  box.style.display = 'block';
+}
+
+async function generateRecommendations(){
+  const location = document.getElementById('rec-location').value.trim();
+  const age = parseInt(document.getElementById('rec-age').value) || null;
+  const btn = document.getElementById('recBtn');
+  const btnText = document.getElementById('recBtnText');
+  const status = document.getElementById('recStatus');
+
+  status.className = 'status-text';
+  status.textContent = '';
+
+  if(!location){
+    status.classList.add('error');
+    status.textContent = 'Bitte gib deinen Wohnort oder deine Stadt ein.';
+    return;
+  }
+
+  btn.disabled = true;
+  btnText.textContent = 'Lade Wetterdaten…';
+
+  try{
+    const geo = await geocodeCity(location);
+    const weather = await fetchWeather(geo.lat, geo.lon);
+    const maxTemp = weather.daily.temperature_2m_max[0];
+
+    renderForecast(weather.daily);
+    const level = renderAlert(maxTemp);
+    updateHeader(maxTemp, level);
+    renderAgeNote(age, maxTemp);
+
+    document.getElementById('forecastWrapper').style.display = 'block';
+    status.classList.add('success');
+    status.textContent = `✓ Standort erkannt: ${geo.name}`;
+  } catch(err){
+    console.error(err);
+    status.classList.add('error');
+    status.textContent = 'Fehler: ' + err.message;
+  } finally {
+    btn.disabled = false;
+    btnText.textContent = 'Empfehlungen generieren';
+  }
+}
+
+document.getElementById('recBtn').addEventListener('click', generateRecommendations);
+
+/* =====================================================================
+   WASSER-TRACKER (Tab 3)
+   Nutzt dieselbe Open-Meteo Wetter-Funktion wie oben.
+   ===================================================================== */
+
+document.getElementById('w-intensitaet').addEventListener('input', function(){
+  document.getElementById('w-intensitaetAnzeige').textContent = this.value;
+});
+
+function showWaterError(message){
+  const box = document.getElementById('waterError');
+  box.textContent = message;
+  box.style.display = 'block';
+  setTimeout(()=>{ box.style.display = 'none'; }, 5000);
+}
+
+async function berechneWasser(){
+  const alter = document.getElementById('w-alter').value;
+  const gewicht = document.getElementById('w-gewicht').value;
+  const stadt = document.getElementById('w-stadt').value;
+  const sportStunden = document.getElementById('w-sport').value;
+  const intensitaet = document.getElementById('w-intensitaet').value;
+  const getrunkeneGlaeser = document.getElementById('w-glaeser').value || 0;
+
+  if(!alter || !gewicht || !stadt || sportStunden === ''){
+    showWaterError('❌ Bitte alle Felder ausfüllen!');
+    return;
+  }
+  if(alter < 1 || alter > 120){
+    showWaterError('❌ Alter muss zwischen 1 und 120 Jahren liegen!');
+    return;
+  }
+  if(gewicht < 20 || gewicht > 300){
+    showWaterError('❌ Gewicht muss zwischen 20 und 300 kg liegen!');
+    return;
+  }
+
+  const btn = document.getElementById('w-calcBtn');
+  const originalText = btn.innerHTML;
+  btn.disabled = true;
+  btn.textContent = 'Lade Wetterdaten…';
+
+  try{
+    const geo = await geocodeCity(stadt);
+    const weather = await fetchWeather(geo.lat, geo.lon);
+    const temperatur = weather.current.temperature_2m;
+
+    const ergebnisse = berechneWasserLogik(
+      parseFloat(alter),
+      parseFloat(gewicht),
+      parseFloat(sportStunden),
+      parseFloat(intensitaet),
+      temperatur,
+      parseFloat(getrunkeneGlaeser)
+    );
+    zeigeWasserErgebnisse(ergebnisse, temperatur);
+  } catch(err){
+    console.error(err);
+    showWaterError('❌ Fehler bei der Temperaturabfrage: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = originalText;
+  }
+}
+
+function berechneWasserLogik(alter, gewicht, sportStunden, intensitaet, temperatur, getrunkeneGlaeser){
+  const basisMenge = gewicht * 0.035;
+  const sportFaktor = 0.5 + (intensitaet / 10) * 0.5;
+  const sportZusatz = sportStunden * sportFaktor;
+  const temperaturZusatz = temperatur > 25 ? 1.0 : 0;
+
+  let alterFaktor = 1;
+  if(alter > 65) alterFaktor = 1.2;
+  else if(alter < 18) alterFaktor = 0.9;
+
+  const gesamtMenge = (basisMenge + sportZusatz + temperaturZusatz) * alterFaktor;
+
+  const glasGroesse = 0.25;
+  const empfohlenGlaeser = Math.round(gesamtMenge / glasGroesse);
+  const basisGlaeser = Math.round(basisMenge / glasGroesse);
+  const sportGlaeser = Math.round(sportZusatz / glasGroesse);
+  const temperaturGlaeser = Math.round(temperaturZusatz / glasGroesse);
+
+  const verbleibendGlaeser = Math.max(0, empfohlenGlaeser - getrunkeneGlaeser);
+  const fortschritt = Math.min(100, (getrunkeneGlaeser / empfohlenGlaeser) * 100);
+
+  return {
+    gesamtMenge,
+    empfohlenGlaeser,
+    basisGlaeser,
+    sportGlaeser,
+    temperaturGlaeser,
+    getrunkeneGlaeser: parseInt(getrunkeneGlaeser),
+    verbleibendGlaeser,
+    fortschritt
+  };
+}
+
+function zeigeWasserErgebnisse(erg, temperatur){
+  document.getElementById('w-temp').textContent = `${Math.round(temperatur)}°C`;
+
+  document.getElementById('w-empfohlen').textContent =
+    `${erg.empfohlenGlaeser} Gläser (${erg.gesamtMenge.toFixed(2)} L)`;
+
+  document.getElementById('w-basis').textContent = `${erg.basisGlaeser} Gläser`;
+  document.getElementById('w-sportzusatz').textContent = `${erg.sportGlaeser} Gläser`;
+  document.getElementById('w-tempzusatz').textContent = `${erg.temperaturGlaeser} Gläser`;
+
+  const progressBar = document.getElementById('w-progressBar');
+  progressBar.style.width = erg.fortschritt + '%';
+
+  const progressText = document.getElementById('w-progressText');
+  progressText.textContent = erg.fortschritt > 20 ? Math.round(erg.fortschritt) + '%' : '';
+
+  document.getElementById('w-progressInfo').textContent =
+    `${erg.getrunkeneGlaeser} / ${erg.empfohlenGlaeser} Gläser (noch ${erg.verbleibendGlaeser})`;
+
+  document.getElementById('w-results').style.display = 'block';
+
+  if(erg.verbleibendGlaeser === 0){
+    setTimeout(()=>{
+      alert('🎉 Glückwunsch! Du hast dein Tagesziel erreicht!');
+    }, 400);
+  }
+}
+
+function resetWasser(){
+  ['w-alter','w-gewicht','w-stadt','w-sport','w-glaeser'].forEach(id=>{
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('w-intensitaet').value = 5;
+  document.getElementById('w-intensitaetAnzeige').textContent = '5';
+  document.getElementById('w-results').style.display = 'none';
+  document.getElementById('waterError').style.display = 'none';
+}
+
+document.getElementById('w-calcBtn').addEventListener('click', berechneWasser);
+document.getElementById('w-resetBtn').addEventListener('click', resetWasser);
+</script>
+
+</body>
+</html>
